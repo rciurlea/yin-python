@@ -3,21 +3,25 @@ from scipy.fftpack import fft
 from scipy.io import wavfile
 import numpy as np
 
-fs, data = wavfile.read("E2_bass.wav")
+fs, data = wavfile.read("E1_bass.wav")
 
 print(fs)
 
-plt.subplot(221)
-plt.plot(data)
+fig = plt.figure()
+g1 = fig.add_subplot(221)
+g1.set_title("Original signal")
+g1.plot(data)
 
-plt.subplot(222)
+
+g2 = fig.add_subplot(222)
+g2.set_title("FFT")
 s = fft(data)
 k = np.arange(len(data))
 T = len(data)/fs
 frqLabel = k/T
 
-plt.plot(frqLabel[:500], abs(s[:500]))
-plt.grid(b=True, which='both', color='0.65')
+g2.plot(frqLabel[:500], abs(s[:500]))
+g2.grid(b=True, which='both', color='0.65')
 
 
 
@@ -31,8 +35,9 @@ for i in range(tau_max):
         s += (data[j] - data[j+i]) * (data[j] - data[j+i])
     r[i] = s
 
-plt.subplot(223)
-plt.plot(r)
+g3 = fig.add_subplot(223)
+g3.set_title("Difference function")
+g3.plot(r)
 
 # d` calculation
 d = np.zeros(tau_max)
@@ -42,7 +47,8 @@ for i in range(1,tau_max):
     s += r[i]
     d[i] = r[i] / ((1 / i) * s) 
 
-plt.subplot(224)
-plt.plot(d)
+g4 = fig.add_subplot(224)
+g4.set_title("Normalized diff function")
+g4.plot(d)
 
 plt.show()
